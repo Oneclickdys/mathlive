@@ -1842,6 +1842,23 @@ import 'https://unpkg.com/@cortex-js/compute-engine?module';
     return this._mathfield.canRedo();
   }
 
+  isTouchDevice(): boolean {
+    return (
+      'ontouchstart' in window || // Compatibilidad con dispositivos touch modernos
+      navigator.maxTouchPoints > 0 || // Compatibilidad con Internet Explorer 10/11 y Surface
+      // @ts-ignore
+      (window.DocumentTouch && document instanceof window.DocumentTouch)
+    ); // Compatibilidad con algunos dispositivos touch antiguos
+  }
+
+  inIframe(): boolean {
+    try {
+      return window.self !== window.top;
+    } catch (e) {
+      return true; // Si hay un error de seguridad, es probable que esté en un iframe.
+    }
+  }
+
   /** @internal */
   handleEvent(evt: Event): void {
     // If the scrim for the variant panel or the menu is
@@ -1857,8 +1874,13 @@ import 'https://unpkg.com/@cortex-js/compute-engine?module';
 
     // Ignore blur events if the scrim is open (case where the variant panel
     // is open). Otherwise we disconect from the VK and end up in a weird state.
-    if (evt.type === 'blur' && Scrim.scrim?.state === 'closed')
-      this._mathfield?.blur();
+    // if (evt.type === 'blur' && Scrim.scrim?.state === 'closed')
+    //   this._mathfield?.blur();
+
+    if (evt.type === 'blur' && Scrim.scrim?.state === 'closed') {
+      // == @agus Si estoy en un dispositivo táctil y dentro de un iframe no tengo que hacer this._mathfield?.blur(); ya que si lo hago cada vez que escribo con el teclado virtual escribe solo una letra
+      if (!(this.isTouchDevice() && this.inIframe())) this._mathfield?.blur();
+    }
   }
 
   /**

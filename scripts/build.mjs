@@ -66,7 +66,8 @@ build({
 build({
   ...BUILD_OPTIONS,
   drop: ['debugger'],
-  pure: ['console.assert', 'console.log'],
+  // remove 'console.log' from the pure options
+  pure: ['console.assert'],
   entryPoints: ['./src/mathlive.ts'],
   outfile: './dist/mathlive.min.mjs',
   format: 'esm',
@@ -77,7 +78,8 @@ build({
   ...BUILD_OPTIONS,
   entryPoints: ['./src/mathlive.ts'],
   drop: ['debugger'],
-  pure: ['console.assert', 'console.log'],
+  // remove 'console.log' from the pure options
+  pure: ['console.assert'],
   outfile: './dist/mathlive.min.js',
   format: 'iife',
   ...UMD_OPTIONS,
@@ -89,7 +91,8 @@ build({
   ...BUILD_OPTIONS,
   entryPoints: ['./src/public/mathlive-ssr.ts'],
   drop: ['debugger'],
-  pure: ['console.assert', 'console.log'],
+  // remove 'console.log' from the pure options
+  pure: ['console.assert'],
   outfile: './dist/mathlive-ssr.min.mjs',
   format: 'esm',
   minify: true,
